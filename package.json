@@ -1,0 +1,25 @@
+{
+  "name": "mssql-libs",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": "true",
+  "keywords": [
+    "typescript"
+  ],
+  "module": "./dist/index..mjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "bundle": "tsup --out-dir bundle"
+  }
+}
