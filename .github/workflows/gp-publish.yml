@@ -18,6 +18,13 @@ jobs:
         id: prev_tag
         run: echo "::set-output name=tag::$(git describe --tags --abbrev=0 HEAD^)"
 
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.1.0
+      - run: |
+          bun install
+          bun run test
+
       - name: Generate Release Notes
         id: generate_release_notes
         run: |
