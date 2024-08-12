@@ -1,0 +1,49 @@
+name: Create Release on Tag
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  create_release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get previous tag
+        id: prev_tag
+        run: echo "::set-output name=tag::$(git describe --tags --abbrev=0 HEAD^)"
+
+      - name: Generate Release Notes
+        id: generate_release_notes
+        run: |
+          PREV_TAG=${{ steps.prev_tag.outputs.tag }}
+          NEW_TAG=${{ github.ref_name }}
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous tag found."
+            git log --oneline > release_notes.txt
+          else
+            git log $PREV_TAG..HEAD --oneline > release_notes.txt
+          fi
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: ${{ steps.generate_release_notes.outputs.notes }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Notes
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release_notes.txt
+          asset_name: release_notes.txt
+          asset_content_type: text/plain
