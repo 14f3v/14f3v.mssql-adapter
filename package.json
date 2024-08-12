@@ -13,13 +13,17 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/mssql": "^9.1.5",
+    "mssql": "^11.0.1",
+    "tsup": "^8.2.4"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "build": "tsup",
-    "bundle": "tsup --out-dir bundle"
+    "build": "bunx tsup",
+    "test": "bun test ./test/index.ts ./test/index.js ./test/index.es6.js",
+    "bundle": "bunx tsup --out-dir bundle"
   }
 }
