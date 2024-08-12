@@ -38,7 +38,11 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: ${{ steps.generate_release_notes.outputs.notes }}
+          # body: ${{ steps.generate_release_notes.outputs.notes }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
           draft: false
           prerelease: false
 
