@@ -39,7 +39,7 @@ jobs:
           body: ${{ steps.generate_release_notes.outputs.notes }}
           draft: false
           prerelease: false
-          token: ${{ secrets.PA_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Notes
         uses: actions/upload-release-asset@v1
