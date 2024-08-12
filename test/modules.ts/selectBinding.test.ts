@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import mssql from 'mssql';
-import MSSQLDatabaseParamBinder from "../../dist";
+import MSSQLAdapter from "../../dist";
 import dbConfig from '../constant';
 
 async function selectionBinding() {
@@ -9,7 +9,7 @@ async function selectionBinding() {
     test(`test select param binding`, async () => {
         try { if (!dbClientPools.connected) await dbClientPools.connect() }
         catch (exception) { console.log('exception', exception) }
-        const bindingParams = new MSSQLDatabaseParamBinder(dbClientPools.request());
+        const bindingParams = new MSSQLAdapter(dbClientPools);
         const selectBinder = bindingParams.selectBinding({
             USER_MASTER_ID: '00001',
             STATUS: 'ACTIVE'

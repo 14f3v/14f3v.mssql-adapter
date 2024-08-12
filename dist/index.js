@@ -64085,17 +64085,19 @@ var require_mssql = __commonJS({
 // src/index.ts
 var src_exports2 = {};
 __export(src_exports2, {
-  MSSQLDatabaseParamBinder: () => mssql_binding_default,
+  MSSQLAdapter: () => mssql_binding_default,
   default: () => src_default
 });
 module.exports = __toCommonJS(src_exports2);
 
 // src/cores/services/mssql.binding.ts
 var import_mssql = __toESM(require_mssql());
-var MSSQLDatabaseParamBinder = class {
+var MSSQLAdapter = class {
   mssqlRequestPrepareStatement;
-  constructor(mssqlRequestPrepareStatement) {
-    this.mssqlRequestPrepareStatement = mssqlRequestPrepareStatement;
+  connectionPools;
+  constructor(connectionPools) {
+    this.connectionPools = connectionPools;
+    this.mssqlRequestPrepareStatement = connectionPools.request();
   }
   get getRequestStatement() {
     return this.mssqlRequestPrepareStatement;
@@ -64128,13 +64130,13 @@ var MSSQLDatabaseParamBinder = class {
     };
   }
 };
-var mssql_binding_default = MSSQLDatabaseParamBinder;
+var mssql_binding_default = MSSQLAdapter;
 
 // src/index.ts
 var src_default = mssql_binding_default;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  MSSQLDatabaseParamBinder
+  MSSQLAdapter
 });
 /*! Bundled license information:
 

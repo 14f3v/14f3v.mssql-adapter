@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import mssql from 'mssql';
-// import MSSQLDatabaseParamBinder from "../../dist";
-const { MSSQLDatabaseParamBinder } = require("../../dist");
+// import MSSQLAdapter from "../../dist";
+const { MSSQLAdapter } = require("../../dist");
 import dbConfig from '../constant';
 
 async function selectionBinding() {
@@ -10,7 +10,7 @@ async function selectionBinding() {
     test(`test select param binding`, async () => {
         try { if (!dbClientPools.connected) await dbClientPools.connect() }
         catch (exception) { console.log('exception', exception) }
-        const bindingParams = new MSSQLDatabaseParamBinder(dbClientPools.request());
+        const bindingParams = new MSSQLAdapter(dbClientPools);
         const selectBinder = bindingParams.selectBinding({
             USER_MASTER_ID: '00001',
             STATUS: 'ACTIVE'

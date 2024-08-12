@@ -64086,10 +64086,12 @@ var require_mssql = __commonJS({
 
 // src/cores/services/mssql.binding.ts
 var import_mssql = __toESM(require_mssql());
-var MSSQLDatabaseParamBinder = class {
+var MSSQLAdapter = class {
   mssqlRequestPrepareStatement;
-  constructor(mssqlRequestPrepareStatement) {
-    this.mssqlRequestPrepareStatement = mssqlRequestPrepareStatement;
+  connectionPools;
+  constructor(connectionPools) {
+    this.connectionPools = connectionPools;
+    this.mssqlRequestPrepareStatement = connectionPools.request();
   }
   get getRequestStatement() {
     return this.mssqlRequestPrepareStatement;
@@ -64122,12 +64124,12 @@ var MSSQLDatabaseParamBinder = class {
     };
   }
 };
-var mssql_binding_default = MSSQLDatabaseParamBinder;
+var mssql_binding_default = MSSQLAdapter;
 
 // src/index.ts
 var src_default = mssql_binding_default;
 export {
-  mssql_binding_default as MSSQLDatabaseParamBinder,
+  mssql_binding_default as MSSQLAdapter,
   src_default as default
 };
 /*! Bundled license information:

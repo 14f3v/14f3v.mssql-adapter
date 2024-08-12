@@ -1,8 +1,9 @@
 import mssql from 'mssql';
 
-declare class MSSQLDatabaseParamBinder {
+declare class MSSQLAdapter {
     private mssqlRequestPrepareStatement;
-    constructor(mssqlRequestPrepareStatement: mssql.Request);
+    connectionPools: mssql.ConnectionPool;
+    constructor(connectionPools: mssql.ConnectionPool);
     get getRequestStatement(): mssql.Request;
     insertBinding(valueObject: {}): {
         column: string;
@@ -14,7 +15,7 @@ declare class MSSQLDatabaseParamBinder {
         valueInputStatement: mssql.Request;
     };
 }
-interface IMSSQLDatabaseParamBinder extends MSSQLDatabaseParamBinder {
+interface IMSSQLAdapter extends MSSQLAdapter {
 }
 
-export { type IMSSQLDatabaseParamBinder, MSSQLDatabaseParamBinder, MSSQLDatabaseParamBinder as default };
+export { type IMSSQLAdapter, MSSQLAdapter, MSSQLAdapter as default };

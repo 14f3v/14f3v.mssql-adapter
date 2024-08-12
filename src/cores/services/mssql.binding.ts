@@ -1,11 +1,11 @@
 import mssql from 'mssql';
 
-class MSSQLDatabaseParamBinder {
+class MSSQLAdapter {
     private mssqlRequestPrepareStatement: mssql.Request;
-    constructor(
-        mssqlRequestPrepareStatement: mssql.Request,
-    ) {
-        this.mssqlRequestPrepareStatement = mssqlRequestPrepareStatement;
+    public connectionPools: mssql.ConnectionPool;
+    constructor(connectionPools: mssql.ConnectionPool/* mssqlRequestPrepareStatement: mssql.Request, */) {
+        this.connectionPools = connectionPools;
+        this.mssqlRequestPrepareStatement = connectionPools.request();
     }
 
     public get getRequestStatement() {
@@ -45,7 +45,7 @@ class MSSQLDatabaseParamBinder {
         }
     }
 
-}; interface IMSSQLDatabaseParamBinder extends MSSQLDatabaseParamBinder { };
+}; interface IMSSQLAdapter extends MSSQLAdapter { };
 
-export default MSSQLDatabaseParamBinder;
-export type { IMSSQLDatabaseParamBinder };
+export default MSSQLAdapter;
+export type { IMSSQLAdapter };

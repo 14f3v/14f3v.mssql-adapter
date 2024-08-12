@@ -23,7 +23,9 @@
   },
   "scripts": {
     "build": "bunx tsup",
-    "test": "bun test ./test/index.ts ./test/index.js ./test/index.es6.js",
-    "bundle": "bunx tsup --out-dir bundle"
+    "test:ts": "bun test ./test/index.ts",
+    "test:es": "bun test ./test/index.es6.js",
+    "test:js": "bun test ./test/index.es6.js",
+    "test": "bun test ./test/index.ts ./test/index.js ./test/index.es6.js"
   }
 }
