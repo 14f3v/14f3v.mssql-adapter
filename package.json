@@ -16,6 +16,7 @@
     "@types/bun": "latest",
     "@types/mssql": "^9.1.5",
     "mssql": "^11.0.1",
+    "mssql-libs": "git+https://github.com/14f3v/14f3v.mssql-adapter.git",
     "tsup": "^8.2.4"
   },
   "peerDependencies": {
