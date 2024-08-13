@@ -31,7 +31,7 @@ yarn add git+https://github.com/14f3v/14f3v.mssql-adapter.git
 
 a usecase of using mssql adaptor selection params binding.
 
-![Image](./images/image.selection.png)
+![Image](https://pub-5aaeaed86d84443285bf87b879339bad.r2.dev/images/image.selection.png)
 
 - code example to use mssql adaptor selection param binding.
 
@@ -76,7 +76,7 @@ export default selectionUsecase;
 
 a usecase of using mssql adaptor insertion params binding.
 
-![Image](./images/image.insertion.png)
+![Image](https://pub-5aaeaed86d84443285bf87b879339bad.r2.dev/images/image.insertion.png)
 
 - code example to use mssql adaptor insertion param binding.
 
@@ -134,7 +134,7 @@ export default insertionUsecase;
 
 a usecase of using mssql adaptor update params binding.
 
-![Image](./images/image.update.png)
+![Image](https://pub-5aaeaed86d84443285bf87b879339bad.r2.dev/images/image.update.png)
 
 - code example to use mssql adaptor update param binding.
 
@@ -205,7 +205,7 @@ export default updateUsecase;
 
 a usecase of using mssql adaptor deletion params binding.
 
-![Image](./images/image.deletion.png)
+![Image](https://pub-5aaeaed86d84443285bf87b879339bad.r2.dev/images/image.deletion.png)
 
 - code example to use mssql adaptor deletion param binding.
 
