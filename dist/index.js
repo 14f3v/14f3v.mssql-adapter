@@ -64095,12 +64095,39 @@ var import_mssql = __toESM(require_mssql());
 var MSSQLAdapter = class {
   mssqlRequestPrepareStatement;
   connectionPools;
-  constructor(connectionPools) {
+  multiple = false;
+  constructor(connectionPools, multiple) {
     this.connectionPools = connectionPools;
     this.mssqlRequestPrepareStatement = connectionPools.request();
+    this.multiple = multiple || false;
+    this.mssqlRequestPrepareStatement.multiple = this.multiple;
   }
   get getRequestStatement() {
     return this.mssqlRequestPrepareStatement;
+  }
+  deleteBinding(valueObject) {
+    let values = [];
+    for (const key in valueObject) {
+      const value = valueObject[key];
+      this.mssqlRequestPrepareStatement.input(key, value);
+      values.push(`${key} = @${key}`);
+    }
+    return {
+      value: values.join(" AND "),
+      valueInputStatement: this.mssqlRequestPrepareStatement
+    };
+  }
+  updateBinding(valueObject) {
+    let values = [];
+    for (const key in valueObject) {
+      const value = valueObject[key];
+      this.mssqlRequestPrepareStatement.input(key, value);
+      values.push(`${key} = @${key}`);
+    }
+    return {
+      value: values.join(", "),
+      valueInputStatement: this.mssqlRequestPrepareStatement
+    };
   }
   insertBinding(valueObject) {
     let column = [];
