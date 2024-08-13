@@ -21,4 +21,7 @@ This project is licensed under the MIT License - see the [LICENSE]() file for de
 Feel free to customize the content according to your project's needs and guidelines. A clear and welcoming contribution section can help foster a collaborative and inclusive community around your project.
 
 
-[click here](./images/image.selection.png)
+# Usecase
+
+## Selection params binding usecase.
+![Image](./images/image.selection.png)
