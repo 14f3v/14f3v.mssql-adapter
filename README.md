@@ -266,9 +266,6 @@ async function deleteBinding() {
 export default deleteBinding;
 ```
 
-## Contributing
-Contributions are welcome! Feel free to submit issues and pull requests.
-
 ### Feedback and Suggestions
 If you have any questions, feedback, or suggestions, please open an issue on the repository. We're open to discussions and appreciate any input you may have.
 
@@ -277,3 +274,23 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 
 Feel free to customize the content according to your project's needs and guidelines. A clear and welcoming contribution section can help foster a collaborative and inclusive community around your project.
+
+## Contributing
+Contributions are welcome! Feel free to submit issues and pull requests.
+
+### Package modules.
+
+To updating a modules navigate to here (src/cores/services/mssql.binding.ts)[./src/cores/services/mssql.binding.ts] to see a detail.
+
+### Module testing.
+
+After make a change completed. run package.json script to test a module updated completion by using a script below.
+
+```bash
+bun run build && bun run test
+```
+
+After run test successfully with out error occrur to module updated or previous change. then create Pull request to main branch and wait for review an approval before make a release.
+
+
+
