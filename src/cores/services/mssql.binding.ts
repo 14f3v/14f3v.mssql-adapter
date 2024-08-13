@@ -3,13 +3,46 @@ import mssql from 'mssql';
 class MSSQLAdapter {
     private mssqlRequestPrepareStatement: mssql.Request;
     public connectionPools: mssql.ConnectionPool;
-    constructor(connectionPools: mssql.ConnectionPool/* mssqlRequestPrepareStatement: mssql.Request, */) {
+    private multiple: boolean = false;
+    constructor(connectionPools: mssql.ConnectionPool/* mssqlRequestPrepareStatement: mssql.Request, */, multiple?: boolean) {
         this.connectionPools = connectionPools;
         this.mssqlRequestPrepareStatement = connectionPools.request();
+        this.multiple = multiple || false;
+        this.mssqlRequestPrepareStatement.multiple = this.multiple;
     }
 
     public get getRequestStatement() {
         return this.mssqlRequestPrepareStatement;
+    }
+
+    public deleteBinding(valueObject: {}) {
+        let values: any[] = [];
+
+        for (const key in valueObject) {
+            const value = valueObject[key as keyof typeof valueObject];
+            this.mssqlRequestPrepareStatement.input(key, value);
+            values.push(`${key} = @${key}`);
+        }
+
+        return {
+            value: values.join(' AND '),
+            valueInputStatement: this.mssqlRequestPrepareStatement,
+        }
+    }
+
+    public updateBinding(valueObject: {}) {
+        let values: any[] = [];
+
+        for (const key in valueObject) {
+            const value = valueObject[key as keyof typeof valueObject];
+            this.mssqlRequestPrepareStatement.input(key, value);
+            values.push(`${key} = @${key}`);
+        }
+
+        return {
+            value: values.join(', '),
+            valueInputStatement: this.mssqlRequestPrepareStatement,
+        }
     }
 
     public insertBinding(valueObject: {}) {
