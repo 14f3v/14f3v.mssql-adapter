@@ -1,6 +1,6 @@
 # 14f3v.bun-library
 
-14f3v.bun-library is the is a template repo for creating bun project library
+The primary purpose of this package is to allow developers to handle MSSQL parameter binding effortlessly. By using mssql-param-binding-adapter, developers can ensure that their SQL queries are protected against injection attacks and are easier to manage, leading to more secure and reliable database interactions.
 
 
 ## Installation
