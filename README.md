@@ -2,6 +2,20 @@
 
 The primary purpose of this package is to allow developers to handle MSSQL parameter binding effortlessly. By using mssql-param-binding-adapter, developers can ensure that their SQL queries are protected against injection attacks and are easier to manage, leading to more secure and reliable database interactions.
 
+## Key Features
+This package simplifies SQL operations by providing parameter binding for common MSSQL statements, ensuring secure and efficient database interactions.
+- **Selection Parameter Binding**: Easily bind parameters in `SELECT` queries to retrieve data safely.
+- **Insertion Parameter Binding**: Bind parameters in `INSERT` queries to add data securely.
+- **Update Parameter Binding**: Bind parameters in `UPDATE` queries to modify data effectively.
+- **Deletion Parameter Binding**: Bind parameters in `DELETE` queries to remove data securely.
+
+## Development RoadMaps
+The development plan focuses on enhancing the package to support a wider range of SQL operations. Upcoming features include:
+- **Support for Advanced `SELECT` Queries**: Implement parameter binding for complex SELECT statements, including `SELECT-IN` and `SELECT-LIKE`.
+- **Bulk Operations**: Introduce support for bulk operations, including `BULK-INSERT`, `BULK-UPDATE`, and `BULK-DELETE`, allowing efficient handling of large datasets.
+- **Comprehensive Documentation**: Expand documentation with examples and best practices for using the package in various scenarios.
+- **Performance Optimizations**: Continuously improve the package's performance, particularly for high-volume operations.
+
 
 ## Installation
 Package not available on npm package manager platform. So, in-case of install package via git, follow an instruction below.
