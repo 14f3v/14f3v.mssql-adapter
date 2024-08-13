@@ -280,7 +280,7 @@ Contributions are welcome! Feel free to submit issues and pull requests.
 
 ### Package modules.
 
-To updating a modules navigate to here (src/cores/services/mssql.binding.ts)[./src/cores/services/mssql.binding.ts] to see a detail.
+To updating a modules navigate to here [src/cores/services/mssql.binding.ts](./src/cores/services/mssql.binding.ts) to see a detail.
 
 ### Module testing.
 
