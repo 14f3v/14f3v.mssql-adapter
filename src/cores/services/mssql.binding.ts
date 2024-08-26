@@ -63,6 +63,27 @@ class MSSQLAdapter {
         }
     }
 
+    public bulkInsertBinding(dataSet: {}[]) {
+        let column: any[] = [];
+        let values: any[] = [];
+        column = Object.entries(dataSet[0]).map(([key]) => key);
+        for (const valueObject of dataSet) {
+            let value: any[] = [];
+            for (const key in valueObject) {
+                const val = valueObject[key as keyof typeof valueObject];
+                this.mssqlRequestPrepareStatement.input(key, val);
+                value.push(`@${key}`);
+            }
+            values.push(value);
+        }
+
+        return {
+            column: '(' + column.join(', ') + ')',
+            value: '(' + values.join(', ') + ')',
+            valueInputStatement: this.mssqlRequestPrepareStatement,
+        }
+    }
+
     public selectBinding(valueObject: {}) {
         let values: any[] = [];
 
