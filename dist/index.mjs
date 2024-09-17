@@ -2673,7 +2673,7 @@ var require_connection_pool = __commonJS({
     var shared = require_shared();
     var clone = require_default();
     var { MSSQLError } = require_error();
-    var ConnectionPool = class extends EventEmitter {
+    var ConnectionPool2 = class extends EventEmitter {
       /**
        * Create new Connection.
        *
@@ -3224,7 +3224,7 @@ var require_connection_pool = __commonJS({
         return new shared.driver.Request(this)._template(strings, values, "batch");
       }
     };
-    module.exports = ConnectionPool;
+    module.exports = ConnectionPool2;
   }
 });
 
@@ -4418,7 +4418,7 @@ var require_transaction = __commonJS({
 var require_base = __commonJS({
   "node_modules/mssql/lib/base/index.js"(exports, module) {
     "use strict";
-    var ConnectionPool = require_connection_pool();
+    var ConnectionPool2 = require_connection_pool();
     var PreparedStatement = require_prepared_statement();
     var Request = require_request();
     var Transaction = require_transaction();
@@ -4429,7 +4429,7 @@ var require_base = __commonJS({
     var { TYPES } = require_datatypes();
     var { connect, close, on, off, removeListener, query, batch } = require_global_connection();
     module.exports = {
-      ConnectionPool,
+      ConnectionPool: ConnectionPool2,
       Transaction,
       Request,
       PreparedStatement,
@@ -62715,7 +62715,7 @@ var require_connection_pool2 = __commonJS({
     var { IDS } = require_utils2();
     var shared = require_shared();
     var ConnectionError = require_connection_error();
-    var ConnectionPool = class extends BaseConnectionPool {
+    var ConnectionPool2 = class extends BaseConnectionPool {
       _config() {
         const cfg = {
           server: this.config.server,
@@ -62847,7 +62847,7 @@ var require_connection_pool2 = __commonJS({
         });
       }
     };
-    module.exports = ConnectionPool;
+    module.exports = ConnectionPool2;
   }
 });
 
@@ -64045,11 +64045,11 @@ var require_tedious2 = __commonJS({
   "node_modules/mssql/lib/tedious/index.js"(exports, module) {
     "use strict";
     var base = require_base();
-    var ConnectionPool = require_connection_pool2();
+    var ConnectionPool2 = require_connection_pool2();
     var Transaction = require_transaction3();
     var Request = require_request3();
     module.exports = Object.assign({
-      ConnectionPool,
+      ConnectionPool: ConnectionPool2,
       Transaction,
       Request,
       PreparedStatement: base.PreparedStatement
@@ -64070,7 +64070,7 @@ var require_tedious2 = __commonJS({
       configurable: false
     });
     base.driver.name = "tedious";
-    base.driver.ConnectionPool = ConnectionPool;
+    base.driver.ConnectionPool = ConnectionPool2;
     base.driver.Transaction = Transaction;
     base.driver.Request = Request;
   }
@@ -64087,40 +64087,59 @@ var require_mssql = __commonJS({
 // src/cores/services/mssql.binding.ts
 var import_mssql = __toESM(require_mssql());
 var MSSQLAdapter = class {
-  mssqlRequestPrepareStatement;
-  connectionPools;
-  multiple = false;
-  constructor(connectionPools, multiple) {
-    this.connectionPools = connectionPools;
-    this.mssqlRequestPrepareStatement = connectionPools.request();
-    this.multiple = multiple || false;
-    this.mssqlRequestPrepareStatement.multiple = this.multiple;
+  connectionPool;
+  requestStatement;
+  constructor(dbConfig) {
+    this.connectionPool = new import_mssql.ConnectionPool(dbConfig);
+    this.requestStatement = this.connectionPool.request();
   }
-  get getRequestStatement() {
-    return this.mssqlRequestPrepareStatement;
+  initRequestStatement() {
+    this.requestStatement = this.connectionPool.request();
+    return this.requestStatement;
+  }
+  async executeQuery(queryString) {
+    try {
+      await this.connectionPool.connect();
+      return [, await this.connectionPool.query(queryString)];
+    } catch (Exception) {
+      return [new Error(String(Exception)), null];
+    } finally {
+      await this.connectionPool.close();
+    }
+  }
+  async queryRequestStatement(queryString) {
+    const requestStatement = this.requestStatement;
+    try {
+      await this.connectionPool.connect();
+      return [, await requestStatement.query(queryString)];
+    } catch (Exception) {
+      return [new Error(String(Exception)), null];
+    } finally {
+      await this.connectionPool.close();
+    }
   }
   deleteBinding(valueObject) {
     let values = [];
     for (const key in valueObject) {
       const value = valueObject[key];
-      this.mssqlRequestPrepareStatement.input(key, value);
+      this.requestStatement?.input(key, value);
       values.push(`${key} = @${key}`);
     }
     return {
       value: values.join(" AND "),
-      valueInputStatement: this.mssqlRequestPrepareStatement
+      inputStatement: this.requestStatement
     };
   }
   updateBinding(valueObject) {
     let values = [];
     for (const key in valueObject) {
       const value = valueObject[key];
-      this.mssqlRequestPrepareStatement.input(key, value);
+      this.requestStatement?.input(key, value);
       values.push(`${key} = @${key}`);
     }
     return {
       value: values.join(", "),
-      valueInputStatement: this.mssqlRequestPrepareStatement
+      inputStatement: this.requestStatement
     };
   }
   insertBinding(valueObject) {
@@ -64128,26 +64147,51 @@ var MSSQLAdapter = class {
     let values = [];
     for (const key in valueObject) {
       const value = valueObject[key];
-      this.mssqlRequestPrepareStatement.input(key, value);
-      column.push(`${key}`);
-      values.push(`@${key}`);
+      if (value && value != "") {
+        this.requestStatement.input(key, value);
+        column.push(`${key}`);
+        values.push(`@${key}`);
+      }
     }
     return {
       column: "(" + column.join(", ") + ")",
       value: "(" + values.join(", ") + ")",
-      valueInputStatement: this.mssqlRequestPrepareStatement
+      inputStatement: this.requestStatement
+    };
+  }
+  bulkInsertBinding(dataSet) {
+    let column = [];
+    let values = [];
+    column = Object.entries(dataSet[0]).map(([key]) => key);
+    let index = 0;
+    for (const valueObject of dataSet) {
+      let value = [];
+      for (const key in valueObject) {
+        const val = valueObject[key];
+        this.requestStatement?.input(`${key}_${index}`, val);
+        value.push(`@${key}_${index}`);
+      }
+      index++;
+      values.push("(" + value.join(", ") + ")");
+    }
+    return {
+      column: "(" + column.join(", ") + ")",
+      values: values.join(", "),
+      inputStatement: this.requestStatement
     };
   }
   selectBinding(valueObject) {
     let values = [];
     for (const key in valueObject) {
       const value = valueObject[key];
-      this.mssqlRequestPrepareStatement.input(key, value);
-      values.push(`${key} = @${key}`);
+      if (value && value != "") {
+        this.requestStatement?.input(key, value);
+        values.push(`${key} = @${key}`);
+      }
     }
     return {
       value: values.join(" AND "),
-      valueInputStatement: this.mssqlRequestPrepareStatement
+      inputStatement: this.requestStatement
     };
   }
 };
