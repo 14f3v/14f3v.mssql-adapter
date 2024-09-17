@@ -1,27 +1,33 @@
-import mssql from 'mssql';
+import { ConnectionPool, Request, config, IResult } from 'mssql';
 
 declare class MSSQLAdapter {
-    private mssqlRequestPrepareStatement;
-    connectionPools: mssql.ConnectionPool;
-    private multiple;
-    constructor(connectionPools: mssql.ConnectionPool, multiple?: boolean);
-    get getRequestStatement(): mssql.Request;
+    connectionPool: ConnectionPool;
+    requestStatement: Request;
+    constructor(dbConfig: config);
+    private initRequestStatement;
+    executeQuery<T = undefined>(queryString: string): Promise<[null | undefined | Error, IResult<T>]>;
+    queryRequestStatement<T = undefined>(queryString: string): Promise<[null | undefined | Error, IResult<T>]>;
     deleteBinding(valueObject: {}): {
         value: string;
-        valueInputStatement: mssql.Request;
+        inputStatement: Request;
     };
     updateBinding(valueObject: {}): {
         value: string;
-        valueInputStatement: mssql.Request;
+        inputStatement: Request;
     };
     insertBinding(valueObject: {}): {
         column: string;
         value: string;
-        valueInputStatement: mssql.Request;
+        inputStatement: Request;
+    };
+    bulkInsertBinding(dataSet: {}[]): {
+        column: string;
+        values: string;
+        inputStatement: Request;
     };
     selectBinding(valueObject: {}): {
         value: string;
-        valueInputStatement: mssql.Request;
+        inputStatement: Request;
     };
 }
 interface IMSSQLAdapter extends MSSQLAdapter {
