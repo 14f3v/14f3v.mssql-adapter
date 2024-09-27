@@ -6,9 +6,9 @@
   "keywords": [
     "typescript"
   ],
-  "module": "./dist/index..mjs",
+  "module": "./dist/index.mjs",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./src/index.ts",
   "files": [
     "dist"
   ],
