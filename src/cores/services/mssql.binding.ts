@@ -67,8 +67,10 @@ class MSSQLAdapter {
 
         for (const key in valueObject) {
             const value = valueObject[key as keyof typeof valueObject];
-            this.requestStatement?.input(key, value);
-            values.push(`${key} = @${key}`);
+            if (value && value != '') {
+                this.requestStatement?.input(key, value);
+                values.push(`${key} = @${key}`);
+            }
         }
 
         return {
@@ -78,7 +80,6 @@ class MSSQLAdapter {
     }
 
     public insertBinding(valueObject: {}) {
-        // this.requestStatement = this.connectionPool.request();
         let column: any[] = [];
         let values: any[] = [];
         for (const key in valueObject) {
@@ -97,7 +98,6 @@ class MSSQLAdapter {
     }
 
     public bulkInsertBinding(dataSet: {}[]) {
-        // this.requestStatement = this.connectionPool.request();
         let column: any[] = [];
         let values: any[] = [];
         column = Object.entries(dataSet[0]).map(([key]) => key);
@@ -121,7 +121,6 @@ class MSSQLAdapter {
     }
 
     public selectBinding(valueObject: {}) {
-        // this.requestStatement = this.connectionPool.request();
         let values: any[] = [];
         for (const key in valueObject) {
             const value = valueObject[key as keyof typeof valueObject];
