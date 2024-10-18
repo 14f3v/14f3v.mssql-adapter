@@ -64140,8 +64140,10 @@ var MSSQLAdapter = class {
     let values = [];
     for (const key in valueObject) {
       const value = valueObject[key];
-      this.requestStatement?.input(key, value);
-      values.push(`${key} = @${key}`);
+      if (value && value != "") {
+        this.requestStatement?.input(key, value);
+        values.push(`${key} = @${key}`);
+      }
     }
     return {
       value: values.join(", "),
